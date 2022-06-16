@@ -14,7 +14,7 @@ public class Validator {
            validate(login, password, confirmPassword);
            return true;
         }
-        catch (WrongPasswordExсeption | WrongLoginException e){
+        catch (WrongPasswordException | WrongLoginException e){
             System.out.println(e.getMessage());
                 return false;
         }
@@ -22,32 +22,31 @@ public class Validator {
 
     private static void validate(String login,
                                  String password,
-                                 String confirmPassword) throws WrongLoginException, WrongPasswordExсeption{
-        if (Objects.isNull(login) || login.length() > 20 || validSymbolsPass(login)) {
+                                 String confirmPassword) throws WrongLoginException, WrongPasswordException{
+        if (Objects.isNull(login) || login.length() >= 20) {
             throw new WrongLoginException("Длина логина должна быть меньше 20 символов");
         }
-        if (validSymbolsPass(login)){
+        if (!validSymbolsPass(login)){
             throw  new WrongLoginException("Логин содержит некорректные символы");
         }
-        if (Objects.isNull(password) || password.length() > 20 || validSymbolsPass(password) ||
-        Objects.isNull(confirmPassword) || confirmPassword.length() > 20){
-            throw new WrongPasswordExсeption("Длина пароля должна быть меньше 20 символов");
+        if (Objects.isNull(password) || password.length() >= 20) {
+            throw new WrongPasswordException("Длина пароля должна быть меньше 20 символов");
         }
-        if(validSymbolsPass(password)){
-            throw new WrongPasswordExсeption("Пароль содержит некорректные символы");
+        if(!validSymbolsPass(password)){
+            throw new WrongPasswordException("Пароль содержит некорректные символы");
         }
         if (!password.equals(confirmPassword)){
-            throw new WrongPasswordExсeption("Пароли не совпадают!");
+            throw new WrongPasswordException("Пароли не совпадают!");
         }
     }
     private static boolean validSymbolsPass(String s){
         char[] symbols = s.toCharArray();
         for (char symbol : symbols){
             if (!validSymbols.contains(String.valueOf(symbol))) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }
 
